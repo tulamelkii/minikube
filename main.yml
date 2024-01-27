@@ -1,8 +1,36 @@
-- name: install minikube
-  hosts: minikube
-  become: yes
-  roles:
-  - update
-  - docker
-  - minikube
+---
+# tasks file for minikube
+- name: Download minikub
+  get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+- name: Download kubctl
+  get_url:
+    url: https://dl.k8s.io/release/v1.29.1/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+- name: change file permision
+  file: 
+    path: /usr/local/bin/kubectl
+    mode: u=rwx,o=rx
+- name: change file permision mini
+  file: 
+    path: /usr/local/bin/minikube
+    mode: u=rwx,o=rx
+- name: Disable SWAP
+  shell:
+    cmd: |
+          swapoff -a
+  args:
+    executable: /bin/bash
+ 
+- name: Remove Swap from fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+- name: start minikube
+  shell: minikube start --driver=docker
+  become_user: vagrant
+
+
 
