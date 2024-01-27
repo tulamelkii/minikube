@@ -1,0 +1,8 @@
+- name: install minikube
+  hosts: minikube
+  become: yes
+  roles:
+  - update
+  - docker
+  - minikube
+

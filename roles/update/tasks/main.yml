@@ -1,0 +1,12 @@
+---
+# tasks file for minikube
+
+- name: install program wget, curl .etc
+  apt:
+    update_cache: yes
+    name:
+    - curl
+    - wget
+    - apt-transport-https
+
+

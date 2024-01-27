@@ -1,0 +1,39 @@
+---
+# tasks file for docker
+- name: install docker
+  apt:
+    name:
+    - ca-certificates
+    - gnupg
+- name: add folder
+  file:
+    path: /etc/apt/keyrings
+    mode: 0755
+- name: Docker apt key
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /usr/share/keyrings/docker.asc
+
+- name: Import Docker GPG key
+  apt_key:
+    file: /usr/share/keyrings/docker.asc
+    state: present
+
+- name: Docker apt source
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: present
+- name: update package docker and install docker
+  apt:
+    update_cache: yes
+    name:
+    - docker-ce 
+    - docker-ce-cli 
+    - containerd.io 
+    - docker-buildx-plugin 
+    - docker-compose-plugin
+- name: add user group 
+  user:
+    name: vagrant
+    group: docker
+    
